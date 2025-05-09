@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Red-Blue Flash</title>
+    <style>
+        body {
+            /* Removed transition for pure flash effect */
+        }
+        button, input[type="range"], select {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 5px 10px;
+            font-size: 12px;
+        }
+        button {
+            top: 20%;
+        }
+        select {
+            top: 30%;
+        }
+        input[type="range"] {
+            top: 40%;
+            width: 60%;
+        }
+        .disclaimer {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            font-size: 10px;
+            text-align: left;
+            width: 80%;
+            color: black;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 2px;
+        }
+    </style>
+</head>
+<body>
+    <button onclick="toggleFlashing()">Start Flashing</button>
+    <select id="flashMode" onchange="changeMode()">
+        <option value="red-blue">Red-Blue</option>
+        <option value="yellow-black">Yellow-Black</option>
+    </select>
+    <input type="range" min="50" max="1000" value="250" id="speedSlider" oninput="updateSpeed(this.value)">
+    <div class="disclaimer">
+        Use of this function is the sole responsibility of the user. Any unlawful activity is not the responsibility of the creator.
+    </div>
+    <script>
+        let isFlashing = false;
+        let flashInterval;
+        let flashSpeed = 250;
+        let currentMode = 'red-blue';
+
+        function toggleFlashing() {
+            if (isFlashing) {
+                stopFlashing();
+            } else {
+                startFlashing();
+            }
+        }
+
+        function startFlashing() {
+            isFlashing = true;
+            document.querySelector('button').textContent = 'Stop Flashing';
+            flashInterval = setInterval(() => {
+                if (currentMode === 'red-blue') {
+                    document.body.style.backgroundColor = document.body.style.backgroundColor === 'red' ? 'blue' : 'red';
+                } else {
+                    document.body.style.backgroundColor = document.body.style.backgroundColor === 'yellow' ? 'black' : 'yellow';
+                }
+            }, flashSpeed);
+        }
+
+        function stopFlashing() {
+            isFlashing = false;
+            document.querySelector('button').textContent = 'Start Flashing';
+            clearInterval(flashInterval);
+            document.body.style.backgroundColor = 'white';
+        }
+
+        function updateSpeed(value) {
+            flashSpeed = value;
+            if (isFlashing) {
+                clearInterval(flashInterval);
+                startFlashing();
+            }
+        }
+
+        function changeMode() {
+            currentMode = document.getElementById('flashMode').value;
+            if (isFlashing) {
+                clearInterval(flashInterval);
+                startFlashing();
+            }
+        }
+    </script>
+</body>
+</html> 
